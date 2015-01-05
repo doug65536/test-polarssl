@@ -1,0 +1,7 @@
+cmake_minimum_required(VERSION 2.8)
+find_package(Qt5Core REQUIRED)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -Wextra -pthread -pedantic -fPIE")
+message(STATUS "${Qt_INCLUDES}")
+include_directories(${Qt5Core_INCLUDE_DIRS})
+add_executable(crypt main.cpp)
+target_link_libraries(crypt ${Qt5Core_LIBRARIES} polarssl)
