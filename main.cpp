@@ -4,25 +4,26 @@
 #include <QDebug>
 
 #include "polarssl/aes.h"
+#include "polarssl/aes.h"
 
 QByteArray decryptStory(QByteArray data, QString keyStr, QString ivStr){
+    QByteArray result;
+
     QByteArray key = keyStr.toUtf8();
     QByteArray iv = ivStr.toUtf8();
 
-
-    char *ckey = key.data();
-    char *ivec = iv.data();
-
-    char *indata = data.data();
-    char outdata[data.length()];
+    result.resize(data.size());
 
     aes_context ctx;
+    //aes_init(&ctx);
 
-    aes_setkey_dec(&ctx, (const unsigned char*)ckey, 128);
+    aes_setkey_dec(&ctx, (const unsigned char*)key.data(), key.size()*8);
 
-    int ret = aes_crypt_cbc(&ctx, AES_DECRYPT, data.size(), (unsigned char*)ivec, (const unsigned char*)indata, (unsigned char*)outdata);
-
-    QByteArray decrypted = QByteArray((const char*) outdata, data.length());
+    int ret = aes_crypt_cbc(&ctx, AES_DECRYPT,
+                            data.size(),
+                            (unsigned char*)iv.data(),
+                            (const unsigned char*)data.data(),
+                            (unsigned char*)result.data());
 
     if(ret == 0){
         qDebug() << "Success";
@@ -31,7 +32,7 @@ QByteArray decryptStory(QByteArray data, QString keyStr, QString ivStr){
     }
 
 
-    return decrypted;
+    return result;
 }
 
 int main()
@@ -39,9 +40,9 @@ int main()
     QString test, key, iv, result;
     QByteArray encryptedData, outputData;
 
-    test = "Hello polarssl";
-    key = "bad passwords are bad";
-    iv = "initialization vectors make me tear up with happiness";
+    test = "Hello polarssl!!";
+    key  = "bad passwords ar";
+    iv   = "initialization v";
 
     encryptedData = decryptStory(test.toUtf8(), key, iv);
     outputData = decryptStory(encryptedData, key, iv);
