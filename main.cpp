@@ -1,15 +1,9 @@
+#include <iostream>
 #include <QByteArray>
 #include <QString>
 #include <QDebug>
 
 #include "polarssl/aes.h"
-
-int main()
-{
-    QString test;
-
-    test = "Hello polarssl";
-}
 
 QByteArray decryptStory(QByteArray data, QString keyStr, QString ivStr){
     QByteArray key = keyStr.toUtf8();
@@ -38,4 +32,19 @@ QByteArray decryptStory(QByteArray data, QString keyStr, QString ivStr){
 
 
     return decrypted;
+}
+
+int main()
+{
+    QString test, key, iv, result;
+    QByteArray encryptedData, outputData;
+
+    test = "Hello polarssl";
+    key = "bad passwords are bad";
+    iv = "initialization vectors make me tear up with happiness";
+
+    encryptedData = decryptStory(test.toUtf8(), key, iv);
+    outputData = decryptStory(encryptedData, key, iv);
+    result = result.fromUtf8(outputData);
+    std::cout << result.toStdString() << std::endl;
 }
